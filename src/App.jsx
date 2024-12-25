@@ -15,7 +15,7 @@ function App() {
 
   const [formData, setFormData] = useState(initialFormData)// object
 
-  //               FUNZIONE ONCHANGE
+  //               FUNZIONE ONCHANGE aggiorna il valore passato-event(obj)
   const handleEventOnChange = (event) => {
     const keyToChange = event.target.name;
     // Se l'input è checkbox,
@@ -72,7 +72,7 @@ function App() {
           <form onSubmit={handlePostForm} >
 
             <div className='mb-3'>
-              <label htmlFor="titolo">Cerca titolo articolo</label>
+              <label htmlFor="title">Cerca titolo articolo</label>
               <input
                 type="text"
                 className='form-control'
