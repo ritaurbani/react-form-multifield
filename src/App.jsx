@@ -6,18 +6,20 @@ function App() {
     title: "",
     content: "",
     category: "",
-    image: "https://picsum.photos/400/300",
+    image: "",
     published: false,
     tags: [],
   }
 
   const [posts, setPosts] = useState([])
 
-  const [formData, setFormData] = useState(initialFormData)// object
+  const [formData, setFormData] = useState(initialFormData)// object  //form dat ae solo per lettura non per aggiornamento-aggiornamento e per nuovo oggetto
 
   //               FUNZIONE ONCHANGE aggiorna il valore passato-event(obj)
-  const handleEventOnChange = (event) => {
+  const handleEventOnChange = (event) => { //event e`oggetto della callback nonche parametro
     const keyToChange = event.target.name;
+    console.log('event: ', event.target)
+    console.log(`the input ${keyToChange} is changing, the new value is ${event.target.type === "checkbox" ? event.target.checked : event.target.value}`) //se primo e`true stampa altrimenti stampa secondo
     // Se l'input è checkbox,
     //    allora il value da inserire sarà true o false, preso da target.checked
     let newValue;
@@ -25,16 +27,41 @@ function App() {
     if (event.target.type === "checkbox") {
       newValue = event.target.checked;
     } else {
-      newValue = event.target.value;
+      newValue = event.target.value; //assegno valore a variabile newValue
     }
 
+    console.log('formData: ', formData)//stato prima
     const newData = {
       ...formData,
-      [keyToChange]: newValue,
+      [keyToChange]: newValue, //override property title con quello che scrivo
     };
+    console.log('new formData: ', newData)
 
-    setFormData(newData);
+    setFormData(newData); //rerender dell input finale
   };
+
+  // const handleEventOnChange2 = (event) => {
+  //   const keyToChange = event.target.name;
+  //   console.log(`the input ${keyToChange} is changing, the new value is ${event.target.type === "checkbox" ? event.target.checked : event.target.value}`) //se primo e`true stampa altrimenti stampa secondo
+  //   // Se l'input è checkbox,
+  //   //    allora il value da inserire sarà true o false, preso da target.checked
+  //   let newValue;
+
+  //   if (event.target.type === "checkbox") {
+  //     newValue = event.target.checked;
+  //   } else {
+  //     newValue = event.target.value; //assegno valore a variabile newValue
+  //   }
+
+
+  //   const newData = {
+  //     ...formData,
+  //     [event.target.name] : event.target.value
+  //     // [keyToChange]: newValue,
+  //   };
+
+  //   setFormData(newData);
+  // };
 
   //               FUNZIONE FORM SUBMIT
   const handlePostForm = (event) => {
@@ -45,6 +72,8 @@ function App() {
       ...formData,
       id: Date.now(),
     };
+
+    console.log('newPost: ', newPost)
 
     // 2 creo la copia dell'array posts precedente, aggiungendo il nuovo post
     const newArray = [...posts, newPost];
@@ -116,12 +145,12 @@ function App() {
             <div className='mb-3'>
               <label htmlFor="content">Image</label>
               <input
-                type="image"
+                type="file"
                 className='form-control'
                 id='image'
                 name='image'
                 value={formData.image}
-                onChange={handleEventOnChange}/>
+                onChange={handleEventOnChange} />
             </div>
 
             {/* INPUT PUBLISHED */}
@@ -132,7 +161,7 @@ function App() {
                 id='published'
                 name='published'
                 checked={formData.published}
-                onChange={handleEventOnChange}/>
+                onChange={handleEventOnChange} />
             </div>
 
             {/* INPUT TAGS */}
