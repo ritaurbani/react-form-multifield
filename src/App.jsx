@@ -9,47 +9,42 @@ function App() {
     category: "",
     image: "",
     published: false,
-    tags: [
-      { name: "art", value: false },
-      { name: "tech", value: false },
-    ]
+    tags: []
+    // { name: "art", value: false },
+    // { name: "tech", value: false },
   }
-
 
   // const tags = formData.tags
 
   const [posts, setPosts] = useState([])
 
-  const [formData, setFormData] = useState(initialFormData)// object  //form dat ae solo per lettura non per aggiornamento-aggiornamento e per nuovo oggetto
+  const [formData, setFormData] = useState(initialFormData)// object  
 
-
-
-  //               FUNZIONE ONCHANGE aggiorna il valore passato-event(obj)
+  //FUNZIONE ONCHANGE aggiorna il valore dell'input passato-event(obj)
   const handleEventOnChange = (event) => { //event e`oggetto della callback nonche parametro
     // const { name, type, value, checked} = event.target
 
-
-    const keyToChange = event.target.name; //questa line non mi serve con destrutturazione 
+    const keyToChange = event.target.name; //proprieta`nome - chiave dinamica
     console.log('event: ', event.target)
-    console.log(`the input ${keyToChange} is changing, the new value is ${event.target.type === "checkbox" ? event.target.checked : event.target.value}`) //se primo e`true stampa altrimenti stampa secondo
-    // Se l'input è checkbox,
-    //    allora il value da inserire sarà true o false, preso da target.checked
+    console.log(`the input ${keyToChange} is changing, the new value is ${event.target.type === "checkbox" ? event.target.checked : event.target.value}`)//Se l'input è checkbox, il value da inserire sarà true o false.
 
-    let newValue;
+    let newValue; //event.target.value oppure event.target.checked (aggiorna il valore dell'input)
 
     // Devo controllare se il tipo dell'input è text o checkbox 
     //Con destrutturazione:  const { name, type, value, checked} = event.target
+    //let valoreInput;
     // if (type === "checkbox") {
     //   valoreInput = checked;
     // } else valoreInput = value;
 
+    //Se l'input (event.target..) è di tipo checkbox, aggiorna il valore dell'input in base alla proprietà checked (vero o falso). Se l'input non è una checkbox, usa semplicemente il valore inserito (es. per un input di tipo text).
     if (event.target.type === "checkbox") { //if (type ==="checkbox" ) 
-      newValue = event.target.checked;
+      newValue = event.target.checked;//true/false
     } else {
       newValue = event.target.value; //assegno valore a variabile newValue
     }
-
     console.log('formData: ', formData)//stato prima
+
     //creates a new object 
     const newData = {
       ...formData,
@@ -57,70 +52,48 @@ function App() {
       [keyToChange]: newValue, //override property title con quello che scrivo
     };
     console.log('new formData: ', newData)
-    //Updates the state with the new form data, causing the component to re-render.
+    //Updates the state with the new form data/oggetto, causing the component to re-render.
     setFormData(newData); //rerender dell input finale
   };
 
-  const handleTagsOnChange = (event) => {
-    const keyToChange = event.target.name;
-    let newValue = event.target.checked;
-    const newTags = formData.tags.map((tag) => {
-      if (keyToChange === tag.name) {
-        return ({
-          ...tag,
-          value: newValue
-        })
-      }
-
-      return tag
-    })
-
-    const newData = {
-      ...formData,
-      tags: newTags
-
-    }
-    setFormData(newData)
-  }
+  // const handleTagsOnChange = (event) => {
+  //   ////////////////////////////////////
+  //   const keyToChange = event.target.name;
+  //   let newValue = event.target.checked;
+  //   ////////////////////////////////////
+  //   const newTags = formData.tags.map((tag) => {
+  //     if (keyToChange === tag.name) {
+  //       return ({
+  //         ...tag,
+  //         value: newValue
+  //       })
+  //     }
+  //     return tag
+  //   })
+  //   const newData = {
+  //     ...formData,
+  //     tags: newTags
+  //   }
+  //   setFormData(newData)
+  // }
   ///////////////////  TAG ////////////////////////
-  // const callbackSyncTags = (event) => {
-  //   // Prendo name e valore dell'input di tipo checkbox
-  //   const { name, checked } = event.target;
+  const callbackSyncTags = (event) => {
+  // const keyToChange = event.target.name;
+  // let newValue = event.target.checked;
 
-  //   const newArray = checked
-  //     ? [...oggettoInpState.tags, name]
-  //     : oggettoInpState.tags.filter((currElement) => currElement !== name);
+    // Prendo name e valore dell'input di tipo checkbox
+    const { name, checked } = event.target;
 
-  //   oggettoSetInpState({
-  //     ...oggettoInpState,
-  //     tags: newArray,
-  //   });
-  // };
-//ESEMPIO TAG FIELD
-  // {/* Input per i checkbox tags */ }
-  // <div>
-  //   <h3>Scegli tags del libro</h3>
-  //   {/* Checkbox fantasy */}
-  //   <label htmlFor="fantasy">
-  //     Fantasy
-  //     <input
-  //       id="fantasy"
-  //       type="checkbox"
-  //       name="fantasy"
-  //       onChange={callbackSyncTags}
-  //     />
-  //   </label>
-  //   {/* Checkbox comedy */}
-  //   <label htmlFor="comedy">
-  //     Comedy
-  //     <input
-  //       id="comedy"
-  //       type="checkbox"
-  //       name="comedy"
-  //       onChange={callbackSyncTags}
-  //     />
+    const newArray = checked  //creo nuovo array con elemento aggiunto o rimosso
+      ? [...formData.tags, name]  // Se la checkbox è selezionata, aggiungi il tag all`array
+      : formData.tags.filter((currElement) => currElement !== name); // Altrimenti, rimuovilo
 
-
+    setFormData({
+      ...formData,// Copia l'oggetto stato precedente
+      tags: newArray, //aggiorna proprieta'tags con nuovo array
+    });
+  };
+  
   //               FUNZIONE FORM SUBMIT
   const handlePostForm = (event) => {
     event.preventDefault();
@@ -143,6 +116,7 @@ function App() {
     // 4. Ripulisco i campi del form reser back to initial values after the post has been added.
     setFormData(initialFormData);
   };
+  
   //filtering out the post with the id that matches the elementToRemove (passed as a parameter).
   //voglio fare un filter rimuovendo id indexToDelete da arrayState
   const removeElement = (elementToRemove) => {
@@ -225,8 +199,7 @@ function App() {
             </div>
 
             {/* INPUT TAGS */}
-
-            {formData.tags.map((tag, index) => {
+            {/* {formData.tags.map((tag, index) => {
               return <div key={index} className='mb-3'>
                 <label htmlFor={tag.name}>{tag.name}</label>
                 <input
@@ -236,8 +209,42 @@ function App() {
                   checked={tag.value}
                   onChange={handleTagsOnChange} />
               </div>
-            })}
+            })} */}
 
+            {/* Input per i checkbox tags */}
+            <div>
+              <h3>Scegli tags del libro</h3>
+              {/* Checkbox fantasy */}
+              <label htmlFor="fantasy">
+                Fantasy
+                <input
+                  id="fantasy"
+                  type="checkbox"
+                  name="fantasy"
+                  onChange={callbackSyncTags}
+                />
+              </label>
+              {/* Checkbox comedy */}
+              <label htmlFor="comedy">
+                Comedy
+                <input
+                  id="comedy"
+                  type="checkbox"
+                  name="comedy"
+                  onChange={callbackSyncTags}
+                />
+              </label>
+              {/* Checkbox romance */}
+              <label htmlFor="romance">
+                Romance
+                <input
+                  id="romance"
+                  type="checkbox"
+                  name="romance"
+                  onChange={callbackSyncTags}
+                />
+              </label>
+            </div>
 
             {/* //BUTTON */}
             <button type='submit' className='my-4 btn btn-success'>Submit</button>
@@ -257,11 +264,14 @@ function App() {
                     <p>{post.category}</p>
                     <img src={post.image} alt=""
                       className='w-75 p-3' />
-                    <p>{post.tags.map((tag) => {
-                      console.log(tag)
-                      return tag.value && tag.name + ' '
+                    
+                      <p>
+                        {/* //map restituira un elenco di span contenenti i tag di ciascun post */}
+                        {post.tags.map((currTag, currIndex) => {
+                          console.log(currTag);
+                        return <span key={currIndex}>{currTag}</span>})}
+                      </p>
 
-                    })}</p>
                     <div>
                       <button className='mx-2 btn btn-outline-success btn-sm'
                         onClick={() => { removeElement(post.id) }}>Cancel</button>
