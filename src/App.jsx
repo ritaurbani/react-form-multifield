@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Card from "./components/Card"
 
 function App() {
 
@@ -257,7 +258,16 @@ function App() {
             posts.map((post, index) => (
               post.published &&
               <div className='col' key={index}>
-                <div className='card'>
+                <Card
+                  title={post.title}
+                  content={post.content}
+                  category={post.category}
+                  image={post.image}
+                  tagsArraySpan={[]}
+                  id={post.id}
+                  onDelete={(event) => removeElement(post.id)}
+                />
+                {/* <div className='card'>
                   <div className='card-body'>
                     <h4>{post.title}</h4>
                     <p>{post.content}</p>
@@ -265,19 +275,20 @@ function App() {
                     <img src={post.image} alt=""
                       className='w-75 p-3' />
                     
-                      <p>
+                      <div> */}
                         {/* //map restituira un elenco di span contenenti i tag di ciascun post */}
-                        {post.tags.map((currTag, currIndex) => {
+                        {/* {post.tags.map((currTag, currIndex) => {
                           console.log(currTag);
-                        return <span key={currIndex}>{currTag}</span>})}
-                      </p>
+                        return <span className= "me-1" key={currIndex}>{currTag}</span>})}
+                      </div>
 
                     <div>
                       <button className='mx-2 btn btn-outline-success btn-sm'
                         onClick={() => { removeElement(post.id) }}>Cancel</button>
                     </div>
                   </div>
-                </div>
+                </div> */}
+                
               </div>
             ))
           }
